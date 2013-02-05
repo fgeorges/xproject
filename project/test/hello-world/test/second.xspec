@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns:hw="http://example.org/hello-world"
+               stylesheet="../src/hello.xsl"
+               query="http://example.org/hello-world"
+               query-at="../src/hello.xql">
+
+   <x:scenario label="hello-002">
+      <x:call function="hw:hello-world">
+         <x:param select="'world'"/>
+      </x:call>
+      <x:expect>
+         <greetings>Hello, world!</greetings>
+      </x:expect>
+   </x:scenario>
+
+</x:description>

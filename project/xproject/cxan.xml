@@ -1,0 +1,17 @@
+<package xmlns="http://cxan.org/ns/package" id="xproject">
+
+   <abstract>
+      XML project structure and management tools.
+   </abstract>
+
+   <author id="fgeorges">Florent Georges</author>
+
+   <category id="applications">Applications</category>
+   <category id="tools">Tools</category>
+   <category id="pkg">Packaging</category>
+
+   <tag>tools</tag>
+   <tag>packaging</tag>
+   <tag>application</tag>
+
+</package>

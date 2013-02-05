@@ -1,0 +1,15 @@
+<project xmlns="http://expath.org/ns/project"
+         name="http://expath.org/lib/project"
+         abbrev="xproject"
+         version="0.5.0">
+
+   <title>XML Project Manager</title>
+
+   <home>http://expath.org/modules/xproject/</home>
+
+   <dependency package="http://expath.org/lib/files"/>
+   <dependency package="http://expath.org/lib/zip"/>
+   <dependency package="http://www.jenitennison.com/xslt/xspec"/>
+   <dependency package="http://xqdoc.org/"/>
+
+</project>

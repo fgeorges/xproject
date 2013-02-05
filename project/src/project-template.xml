@@ -1,0 +1,11 @@
+<project xmlns="http://expath.org/ns/project"
+         name=""
+         abbrev=""
+         version="">
+
+   <title></title>
+
+   <dependency package=""/>
+   <dependency package=""/>
+   
+</project>

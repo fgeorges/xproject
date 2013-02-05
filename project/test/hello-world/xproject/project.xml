@@ -1,0 +1,58 @@
+<project xmlns="http://expath.org/ns/project"
+         name="http://example.org/hello-world"
+         abbrev="hello-world"
+         version="1.0.0">
+
+   <title>Hello, world!: an example project</title>
+
+   <tests dir="test">
+
+      <!-- BaseX -->
+      <processor name="http://expath.org/tmp/basex/server/xquery" report="$1reports/$2-basex-srv.html">
+         <property name="endpoint"    value="http://localhost:8984/rest/"/>
+         <property name="username"    value="admin"/>
+         <property name="password"    value="admin"/>
+         <property name="auth-method" value="basic"/>
+      </processor>
+
+      <processor name="http://expath.org/tmp/basex/standalone/xquery" report="$1reports/$2-basex-st.html">
+         <property name="basex-jar"  value="file:/Applications/BaseX-7.0.2pre-20111107.app/Contents/Resources/Java/repo/org/basex/basex/7.0.2-SNAPSHOT/basex-7.0.2-SNAPSHOT.jar"/>
+         <property name="xspec-home" value="file:/Users/fgeorges/projects/xslt/xspec/trunk/"/>
+      </processor>
+
+      <!-- eXist -->
+      <processor name="http://expath.org/tmp/exist/xquery" report="$1reports/$2-exist.html">
+         <!-- TODO: What about credentials...? -->
+         <property name="endpoint"         value="http://localhost:8080/exist/rest/db/"/>
+         <!-- replace $1 by the path of the tested module, relative to src/ -->
+         <property name="modules-re"       value="xmldb:exist:///db/hello-world/$1"/>
+         <property name="utils-library-at" value="xmldb:exist:///db/xspec/generate-query-utils.xql"/>
+      </processor>
+
+      <!-- MarkLogic -->
+      <processor name="http://expath.org/tmp/marklogic/xquery" report="$1reports/$2-ml.html">
+         <property name="host"             value="localhost"/>
+         <!-- this must be the port of an XDBC server -->
+         <property name="port"             value="4001"/>
+         <property name="user"             value="admin"/>
+         <property name="password"         value="admin"/>
+         <!-- replace $1 by the path of the tested module, relative to src/ -->
+         <property name="modules-re"       value="/hello-world/$1"/>
+         <property name="utils-library-at" value="xspec/generate-query-utils.xql"/>
+      </processor>
+
+      <!-- Saxon -->
+      <processor name="http://expath.org/tmp/saxon/xquery" report="$1reports/$2-saxon-xq.html">
+         <property name="xspec-home" value="file:/Users/fgeorges/projects/xslt/xspec/trunk/"/>
+      </processor>
+
+      <processor name="http://expath.org/tmp/saxon/xslt" report="$1reports/$2-saxon-xsl.html"/>
+
+      <!-- Zorba -->
+      <processor name="http://expath.org/tmp/zorba/xquery" report="$1reports/$2-zorba.html">
+         <property name="xspec-home" value="file:/Users/fgeorges/projects/xslt/xspec/trunk/"/>
+      </processor>
+
+   </tests>
+
+</project>
