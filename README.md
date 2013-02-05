@@ -27,7 +27,7 @@ heard):
 For more information: `xproj help`.
 
 
-## Download
+## Install
 
 Install it directly from CXAN with: `cxan install xproject`.
 
