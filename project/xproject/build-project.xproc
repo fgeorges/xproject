@@ -5,9 +5,12 @@
    <!-- the project.xml -->
    <p:input port="source" primary="true"/>
 
-   <!--p:import href="http://expath.org/ns/project/build.xproc"/-->
+   <!-- This project is special, we can use the current implementation
+        if we want, without requiring to install it, because it is
+        just right here... -->
    <p:import href="../src/build.xproc"/>
+   <!--p:import href="http://expath.org/ns/project/build.xproc"/-->
 
-   <proj:build ignore-dirs=".~,.svn,templates" ignore-components="xquery-parser.xql"/>
+   <proj:build ignore-dirs=".~,templates" ignore-components="xquery-parser.xql"/>
 
 </p:declare-step>
