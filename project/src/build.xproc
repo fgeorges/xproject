@@ -21,12 +21,12 @@
    <!-- the parameters -->
    <p:input port="parameters" primary="true" kind="parameter"/>
 
-   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-
    <!-- directories to ignore, comma-separated list of dir names -->
    <p:option name="ignore-dirs"       required="false" select="'.~,.git,.svn,CVS'"/>
    <!-- components to ignore, comma-separated list of anchored regexes -->
    <p:option name="ignore-components" required="false" select="''"/>
+
+   <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
    <!--
        Like p:directory-list, but recursive.
@@ -199,6 +199,8 @@
       <p:input  port="source" primary="true"/>
       <!-- the package descriptor (without components) -->
       <p:output port="result" primary="true"/>
+      <!-- TODO: This does not work with pxp:zip?!? -->
+      <!--p:xslt output-base-uri="http://expath.org/ns/project/expath-pkg.xml"-->
       <p:xslt>
          <p:input port="stylesheet">
             <p:inline>
@@ -554,11 +556,13 @@
    <p:variable name="src-dir"      select="resolve-uri('src/', $project-dir)"/>
    <p:variable name="dist-dir"     select="resolve-uri('dist/', $project-dir)"/>
    <p:variable name="private-dir"  select="resolve-uri('xproject/', $project-dir)"/>
+   <p:variable name="web-desc"     select="resolve-uri('expath-web.xml', $private-dir)"/>
    <p:variable name="abbrev"       select="/proj:project/@abbrev"/>
    <p:variable name="version"      select="/proj:project/@version"/>
    <p:variable name="xar-name"     select="concat($abbrev, '-', $version)"/>
-   <!-- TODO: Modify it to be *.xaw instead of *.xar if xproject/expath-web.xml exists. -->
-   <p:variable name="xar-file"     select="concat($xar-name, '.xar')"/>
+   <p:variable name="is-web"       select="doc-available($web-desc)"/>
+   <p:variable name="xar-ext"      select="if ( xs:boolean($is-web) ) then '.xaw' else '.xar'"/>
+   <p:variable name="xar-file"     select="concat($xar-name, $xar-ext)"/>
    <p:variable name="xar-uri"      select="resolve-uri($xar-file, $dist-dir)"/>
 
    <cx:message>
@@ -611,6 +615,15 @@
       </p:input>
    </proj:generate-pkg-desc>
 
+   <!-- TODO: This does make the descriptor invalid against the schema.  We need
+        another way to set the base URI of a document (than altering its content
+        by adding an attribute).  I talk to Norm, we agreed on the need to
+        provide another way to achieve this.
+        
+        TODO: Send an email to XProc Dev (see above...)
+        
+        TODO: Should work anyway with output-base-uri on p:xslt, but it does
+        not.  When I try, it fails on pxp:zip... -->
    <p:add-attribute
        name="pkg-desc"
        match="/*"
