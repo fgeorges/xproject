@@ -9,7 +9,7 @@
                 exclude-inline-prefixes="p c xs pkg proj pxf"
                 version="1.0">
 
-   <!-- a c:result element with the path to the new project descriptor (aka
+   <!-- a c:result element with the path to the new project descriptor (e.g.
         [project]/xproject/project.xml) -->
    <p:output port="result" primary="true"/>
 
@@ -19,7 +19,7 @@
    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
    <!--
-       A real sink, without any input nor output.
+       A real sink. Has no I/O.
    -->
    <p:declare-step type="proj:noop">
       <p:sink>
@@ -30,7 +30,7 @@
    </p:declare-step>
 
    <!--
-       A real error step, without any input nor output, and a message option.
+       A real error step. Has no I/O. Has a message option.
    -->
    <p:declare-step type="proj:error">
       <p:option name="code" required="true"/>
