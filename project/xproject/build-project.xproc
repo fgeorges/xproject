@@ -8,6 +8,6 @@
    <!--p:import href="http://expath.org/ns/project/build.xproc"/-->
    <p:import href="../src/build.xproc"/>
 
-   <proj:build ignore-dirs=".~,.svn,templates" ignore-components="xquery-parser.xql"/>
+   <proj:build ignore-dirs=".~,.git,.svn,templates" ignore-components="xquery-parser.xql"/>
 
 </p:declare-step>
