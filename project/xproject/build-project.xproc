@@ -2,6 +2,12 @@
                 xmlns:proj="http://expath.org/ns/project"
                 version="1.0">
 
+   <!--
+       Customizer for XProjet build: ignore templates/ and the XQuery parser.
+       
+       TODO: Anyway, the XQuery parser should be released as a library on its own!
+   -->
+
    <!-- the project.xml -->
    <p:input port="source" primary="true"/>
 

@@ -8,8 +8,15 @@
                 exclude-inline-prefixes="p c pkg proj"
                 version="1.0">
 
-   <!-- the project.xml -->
-   <p:input port="source" primary="true"/>
+   <p:documentation>
+      <p>Run on the project descriptor, generate the documentation from the sources.</p>
+   </p:documentation>
+
+   <p:input port="source" primary="true">
+      <p:documentation>
+         <p>The xproject/project.xml descriptor.</p>
+      </p:documentation>
+   </p:input>
 
    <!-- the list of generated files -->
    <!-- TODO: Still to be done. -->

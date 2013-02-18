@@ -8,11 +8,22 @@
                 exclude-inline-prefixes="p c pkg proj t"
                 version="1.0">
 
-   <!-- the project.xml -->
-   <p:input port="source" primary="true"/>
+   <p:documentation>
+      <p>When run on the project descriptor, run the unit tests.</p>
+   </p:documentation>
+
+   <p:input port="source" primary="true">
+      <p:documentation>
+         <p>The xproject/project.xml descriptor.</p>
+      </p:documentation>
+   </p:input>
 
    <!-- the list of suites -->
-   <p:output port="result" primary="true" sequence="true"/>
+   <p:output port="result" primary="true" sequence="true">
+      <p:documentation>
+         <p></p>
+      </p:documentation>
+   </p:output>
 
    <!-- indent the overall report -->
    <p:serialization port="result" indent="true"/>
@@ -29,6 +40,9 @@
    <p:import href="http://www.jenitennison.com/xslt/xspec/zorba/harness/xquery.xproc"/>
 
    <p:declare-step type="t:run-suites">
+      <p:documentation>
+         <p>TODO: ...</p>
+      </p:documentation>
       <p:input  port="source"     primary="true"/>
       <p:input  port="parameters" primary="true" kind="parameter"/>
       <p:output port="result"     primary="true"/>
@@ -49,18 +63,18 @@
       </p:add-attribute>
    </p:declare-step>
 
-   <!--
-       TODO: step run-suite
-       - receive the XSpec doc (source port)
-       - receive the processor name (processor option)
-       - receive other useful options (XSpec home, etc.)
-         (config file in ~/.xproject.xml ?, to configure BaseX JAR, XSpec home,
-         zorba script, ...)
-       - dispatch to the appropriate step
-       
-       NEW: Receive <suite uri="..."/> on the source port, enrich it with report="..."
-   -->
    <p:declare-step type="t:run-suite" name="me">
+      <p:documentation>
+         <p>TODO: step run-suite</p>
+         <ul>
+            <li>receive the XSpec doc (source port)</li>
+            <li>receive the processor name (processor option)</li>
+            <li>receive other useful options (XSpec home, etc.) (config file in ~/.xproject.xml ?,
+               to configure BaseX JAR, XSpec home, zorba script, ...)</li>
+            <li>dispatch to the appropriate step</li>
+         </ul>
+         <p>NEW: Receive &lt;suite uri="..."/> on the source port, enrich it with report="..."</p>
+      </p:documentation>
       <p:input  port="source"     primary="true"/>
       <p:output port="result"     primary="true"/>
       <p:input  port="parameters" primary="true" kind="parameter"/>
@@ -92,19 +106,18 @@
       </p:add-attribute>
    </p:declare-step>
 
-   <!--
-       TODO: How to handle suites dedicated to EITHER XQuery or XSLT?  Which is by far the
-       nust usual case.  E.g. if we have test/ with suites for XQuery and XSLT (that is,
-       some for XQuery, and others for XSLT), then we should be able to say processors to
-       be ued for tests are Saxon (XSLT) and say BaseX (XQuery) and eXist (XQuery).
-       Depending on the suite's @stylesheet and/or @query, then the corresponding
-       processors will be actually applied or not...
-       
-       The only case where a suite is both about XSLT and XQuery is when we implement a
-       library of XPath function, either as an extension module (e.g. written in Java for
-       eXist) or a library of functions in both languages (like FunctX does)...
-   -->
    <p:declare-step type="t:dispatch-to-processor">
+      <p:documentation>
+         <p>TODO: How to handle suites dedicated to EITHER XQuery or XSLT?  Which is by far the
+            most usual case.  E.g. if we have test/ with suites for XQuery and XSLT (that is,
+            some for XQuery, and others for XSLT), then we should be able to say processors to
+            be ued for tests are Saxon (XSLT) and say BaseX (XQuery) and eXist (XQuery).
+            Depending on the suite's @stylesheet and/or @query, then the corresponding
+            processors will be actually applied or not...</p>
+         <p>The only case where a suite is both about XSLT and XQuery is when we implement a
+            library of XPath function, either as an extension module (e.g. written in Java for
+            eXist) or a library of functions in both languages (like FunctX does)...</p>
+      </p:documentation>
       <p:input  port="source"     primary="true"/>
       <p:input  port="parameters" primary="true" kind="parameter"/>
       <p:output port="result"     primary="true"/>
@@ -169,11 +182,11 @@
       </p:choose>
    </p:declare-step>
 
-   <!--
-       - filter the XSpec suites in each dir
-       - recurse on subdirs
-   -->
    <p:declare-step type="t:find-suites">
+      <p:documentation>
+         <p>- filter the XSpec suites in each dir</p>
+         <p>- recurse on subdirs</p>
+      </p:documentation>
       <p:output port="result" sequence="true"/>
       <p:option name="dir" required="true"/>
       <!-- read the directory content -->

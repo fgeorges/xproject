@@ -9,19 +9,32 @@
                 exclude-inline-prefixes="p c xs pkg proj pxf"
                 version="1.0">
 
-   <!-- a c:result element with the path to the new project descriptor (aka
-        [project]/xproject/project.xml) -->
-   <p:output port="result" primary="true"/>
+   <p:documentation>
+      <p>Create a new project structure.</p>
+      <p>A directory is created at $path, which must not exist.  This is the root of the new
+         project.  A template of the project decsriptor is also created in xproject/project.xml,
+         as well as an empty src/ sub-directory.</p>
+   </p:documentation>
 
-   <!-- the directory to create (must not exist, must be absolute) -->
-   <p:option name="path" required="true"/>
+   <p:output port="result" primary="true">
+      <p:documentation>
+         <p>A c:result element with the path to the new project descriptor (aka
+            [project]/xproject/project.xml).</p>
+      </p:documentation>
+   </p:output>
+
+   <p:option name="path" required="true">
+      <p:documentation>
+         <p>The directory to create (must not exist, must be absolute).</p>
+      </p:documentation>
+   </p:option>
 
    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
-   <!--
-       A real sink, without any input nor output.
-   -->
    <p:declare-step type="proj:noop">
+      <p:documentation>
+         <p>A real sink, without any input nor output.</p>
+      </p:documentation>
       <p:sink>
          <p:input port="source">
             <p:empty/>
@@ -29,10 +42,10 @@
       </p:sink>
    </p:declare-step>
 
-   <!--
-       A real error step, without any input nor output, and a message option.
-   -->
    <p:declare-step type="proj:error">
+      <p:documentation>
+         <p>A real error step, without any input nor output, and a message option.</p>
+      </p:documentation>
       <p:option name="code" required="true"/>
       <p:option name="msg"  required="true"/>
       <p:template>
@@ -52,10 +65,10 @@
       <p:sink/>
    </p:declare-step>
 
-   <!--
-       No-op if the file does not exist, or raise an error.
-   -->
    <p:declare-step type="proj:file-does-not-exist">
+      <p:documentation>
+         <p>No-op if the file does not exist, or raise an error.</p>
+      </p:documentation>
       <p:option name="path" required="true"/>
       <p:try>
          <p:group>

@@ -6,32 +6,53 @@
                 xmlns:pkg="http://expath.org/ns/pkg"
                 xmlns:proj="http://expath.org/ns/project"
                 xmlns:pxp="http://exproc.org/proposed/steps"
+                xmlns:h="http://www.w3.org/1999/xhtml"
                 pkg:import-uri="http://expath.org/ns/project/build.xproc"
                 name="pipeline"
                 exclude-inline-prefixes="p cx xsl pkg pxp"
                 version="1.0"
                 type="proj:build">
 
-   <!-- the project.xml -->
-   <p:input port="source" primary="true"/>
+   <p:documentation>
+      <p>Run on the project descriptor, create a package in dist/.</p>
+   </p:documentation>
 
-   <!-- additional or overloading files in the XAR -->
-   <p:input port="files" sequence="true"/>
+   <p:input port="source" primary="true">
+      <p:documentation>
+         <p>The xproject/project.xml descriptor.</p>
+      </p:documentation>
+   </p:input>
 
-   <!-- the parameters -->
-   <p:input port="parameters" primary="true" kind="parameter"/>
+   <p:input port="files" sequence="true">
+      <p:documentation>
+         <p>Additional or overloading files in the XAR.</p>
+      </p:documentation>
+   </p:input>
 
-   <!-- directories to ignore, comma-separated list of dir names -->
-   <p:option name="ignore-dirs"       required="false" select="'.~,.git,.svn,CVS'"/>
-   <!-- components to ignore, comma-separated list of anchored regexes -->
-   <p:option name="ignore-components" required="false" select="''"/>
+   <p:input port="parameters" primary="true" kind="parameter">
+      <p:documentation>
+         <p>The parameters.</p>
+      </p:documentation>
+   </p:input>
+
+   <p:option name="ignore-dirs" required="false" select="'.~,.git,.svn,CVS'">
+      <p:documentation>
+         <p>Directories to ignore, comma-separated list of dir names.</p>
+      </p:documentation>
+   </p:option>
+
+   <p:option name="ignore-components" required="false" select="''">
+      <p:documentation>
+         <p>Components to ignore, comma-separated list of anchored regexes.</p>
+      </p:documentation>
+   </p:option>
 
    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 
-   <!--
-       Like p:directory-list, but recursive.
-   -->
    <p:declare-step type="proj:recurse-dir">
+      <p:documentation>
+         <p>Like p:directory-list, but recursive.</p>
+      </p:documentation>
       <!-- the recursive dir structure -->
       <p:output port="result" primary="true"/>
       <p:option name="dir"         required="true"/>
@@ -59,14 +80,13 @@
       </p:viewport>
    </p:declare-step>
 
-   <!--
-       From the recursive content of src/, build the corresponding ZIP structure.
-       
-       The ZIP structure (as expected by pxp:zip) does not include the top-level
-       descriptors (like expath-pkg.xml, cxan.xml, etc.)  Only the content from the
-       src/ sub-directory.
-   -->
    <p:declare-step type="proj:zip-structure">
+      <p:documentation>
+         <p>From the recursive content of src/, build the corresponding ZIP structure.</p>
+         <p>The ZIP structure (as expected by pxp:zip) does not include the top-level
+            descriptors (like expath-pkg.xml, cxan.xml, etc.)  Only the content from the
+            src/ sub-directory.</p>
+      </p:documentation>
       <!-- the recursive src/ structure -->
       <p:input  port="source" primary="true"/>
       <!-- the corresponding zip structure (to pass to pxp:zip) -->
@@ -108,14 +128,13 @@
       </p:xslt>
    </p:declare-step>
 
-   <!--
-       Add one of the descriptors in xproject/ to the ZIP structure.
-       
-       The descriptor is added at the root of the ZIP file, and at the beginning.
-       This step does not generate the package descriptor, just adds a fixed file
-       stored in the xproject/ private directory.
-   -->
    <p:declare-step type="proj:add-extension-entry" name="this">
+      <p:documentation>
+         <p>Add one of the descriptors in xproject/ to the ZIP structure.</p>
+         <p>The descriptor is added at the root of the ZIP file, and at the beginning.
+            This step does not generate the package descriptor, just adds a fixed file
+            stored in the xproject/ private directory.</p>
+      </p:documentation>
       <!-- the zip structure -->
       <p:input  port="source" primary="true"/>
       <!-- the augmented zip structure -->
@@ -157,11 +176,11 @@
       </p:choose>
    </p:declare-step>
 
-   <!--
-       From the recursive content of src/ and the project descriptor, generate
-       the expath-pkg.xml descriptor.
-   -->
    <p:declare-step type="proj:generate-pkg-desc" name="this">
+      <p:documentation>
+         <p>From the recursive content of src/ and the project descriptor, generate
+            the expath-pkg.xml descriptor.</p>
+      </p:documentation>
       <!-- the project descriptor -->
       <p:input  port="project" primary="true"/>
       <!-- the recursive src/ structure -->
@@ -190,11 +209,11 @@
       </p:insert>
    </p:declare-step>
 
-   <!--
-       From the project descriptor, generate a first skeleton of the package
-       descriptor (without the components themselves).
-   -->
    <p:declare-step type="proj:project-to-pkg-desc">
+      <p:documentation>
+         <p>From the project descriptor, generate a first skeleton of the package
+            descriptor (without the components themselves).</p>
+      </p:documentation>
       <!-- the project descriptor -->
       <p:input  port="source" primary="true"/>
       <!-- the package descriptor (without components) -->
@@ -232,12 +251,12 @@
       </p:xslt>
    </p:declare-step>
 
-   <!--
-       From the recursive content of a directory (src/ or descendant), generate
-       the elements to describe the components in the package descriptor (that
-       is, the elements 'xslt', 'xquery', etc. to add to the pkg desc).
-   -->
    <p:declare-step type="proj:component-descriptors">
+      <p:documentation>
+         <p>From the recursive content of a directory (src/ or descendant), generate
+            the elements to describe the components in the package descriptor (that
+            is, the elements 'xslt', 'xquery', etc. to add to the pkg desc).</p>
+      </p:documentation>
       <!-- the recursive src/ structure -->
       <p:input  port="source" primary="true"/>
       <!-- the package descriptor -->
@@ -301,6 +320,9 @@
    </p:declare-step>
 
    <p:declare-step type="proj:dispatch-component">
+      <p:documentation>
+         <p>TODO: ...</p>
+      </p:documentation>
       <!-- the descriptor of this one component (or none if not a component) -->
       <p:output port="result" primary="true" sequence="true"/>
       <!-- the path to use in the pkg desc -->
@@ -353,6 +375,9 @@
    </p:declare-step>
 
    <p:declare-step type="proj:handle-stylesheet">
+      <p:documentation>
+         <p>TODO: ...</p>
+      </p:documentation>
       <!-- the descriptor of this one component -->
       <p:output port="result" primary="true" sequence="true"/>
       <!-- the path to use in the pkg desc -->
@@ -367,6 +392,9 @@
    </p:declare-step>
 
    <p:declare-step type="proj:handle-main-query">
+      <p:documentation>
+         <p>TODO: ...</p>
+      </p:documentation>
       <!-- the descriptor of this one component -->
       <p:output port="result" primary="true" sequence="true"/>
       <!-- the path to use in the pkg desc -->
@@ -409,6 +437,9 @@
    </p:declare-step>
 
    <p:declare-step type="proj:handle-query-lib">
+      <p:documentation>
+         <p>TODO: ...</p>
+      </p:documentation>
       <!-- the descriptor of this one component -->
       <p:output port="result" primary="true" sequence="true"/>
       <!-- the path to use in the pkg desc -->
@@ -474,6 +505,9 @@
    </p:declare-step>
 
    <p:declare-step type="proj:handle-xproc">
+      <p:documentation>
+         <p>TODO: ...</p>
+      </p:documentation>
       <!-- the descriptor of this one component -->
       <p:output port="result" primary="true" sequence="true"/>
       <!-- the path to use in the pkg desc -->
@@ -488,6 +522,9 @@
    </p:declare-step>
 
    <p:declare-step type="proj:create-component-descriptor">
+      <p:documentation>
+         <p>TODO: ...</p>
+      </p:documentation>
       <!-- the descriptor of this one component -->
       <p:output port="result" primary="true" sequence="true"/>
       <!-- the element name to use for the component in the pkg desc -->
@@ -567,7 +604,7 @@
    <p:variable name="xar-uri"      select="resolve-uri($xar-file, $dist-dir)"/>
 
    <cx:message>
-       <p:with-option name="message" select="concat('Building project ', $project-dir)"/>
+      <p:with-option name="message" select="concat('Building project ', $project-dir)"/>
    </cx:message>
 
    <!--
