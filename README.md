@@ -17,7 +17,7 @@ and annotations with the XML components, it can:
 - generate the documentation out of the sources
 
 It understands the following languages (but we are happy to add
-support for your prefered language, if you ask loud enough to be
+support for your preferred language, if you ask loud enough to be
 heard):
 
 - XProc
@@ -29,12 +29,16 @@ For more information: `xproj help`.
 
 ## Install
 
-Install it directly from CXAN with: `cxan install xproject`.
+### From CXAN
 
-You can also download the XAR or the release file from the [download
-area](http://code.google.com/p/expath-pkg/downloads).  Look for the
-latest file named `xproject-x.y.z.xar`.  Install it in your package
-repository with: `xrepo install xproject-x.y.z.xar`.
+Run the command: `cxan install xproject`.
+
+### Using xrepo
+
+- Visit the [download area](http://code.google.com/p/expath-pkg/downloads)
+- Look for the latest file named `xproject-x.y.z.zip`
+- Install the XAR file it contains within your package repository: `xrepo install xproject-x.y.z.xar`
+- Put the schell script into your PATH
 
 If you don't have the EXPath Repository manager, install it first from
 [expath-pkg-java](https://github.com/fgeorges/expath-pkg-java).
@@ -43,6 +47,11 @@ If you don't have the EXPath Repository manager, install it first from
 ## Related project
 
 An XProject plugin for oXygen also exists.  The repository is at
-[xproject-oxygen](https://github.com/fgeorges/xproject-oxygen), and
-you can download it from the same place as XProject itself (just look
-for the latest `xproject-oxygen-plugin-x.y.z.zip` file instead).
+[xproject-oxygen](https://github.com/fgeorges/xproject-oxygen).
+
+You can install it directly from within oXygen, using the EXPath
+[oXygen addon repository](http://expath.org/oxygen/).
+
+Alternatively, you can download it from the same place as XProject
+itself.  Just look for the latest `xproject-oxygen-plugin-x.y.z.zip`
+file instead, and unzip it into your oXygen `plugins/` sub-directory.
