@@ -554,6 +554,7 @@
    -->
    <p:variable name="project-dir"  select="resolve-uri('../', base-uri(/))"/>
    <p:variable name="src-dir"      select="resolve-uri('src/', $project-dir)"/>
+   <p:variable name="samples-dir"  select="resolve-uri('samples/', $project-dir)"/>
    <p:variable name="dist-dir"     select="resolve-uri('dist/', $project-dir)"/>
    <p:variable name="private-dir"  select="resolve-uri('xproject/', $project-dir)"/>
    <p:variable name="web-desc"     select="resolve-uri('expath-web.xml', $private-dir)"/>

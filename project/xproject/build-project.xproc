@@ -5,6 +5,9 @@
    <!-- the project.xml -->
    <p:input port="source" primary="true"/>
 
+   <!-- the parameters -->
+   <p:input port="parameters" primary="true" kind="parameter"/>
+
    <!-- This project is special, we can use the current implementation
         if we want, without requiring to install it, because it is
         just right here... -->
