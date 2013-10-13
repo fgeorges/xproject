@@ -29,6 +29,34 @@
       </p:documentation>
    </p:input>
 
+   <p:input port="manifest" sequence="true">
+      <p:documentation>
+         <p>An optional document of the form:</p>
+         <pre><![CDATA[<manifest>
+   <entry name="extra-engine.xml"       href="../xproject/extra-engine.xml"/>
+   <entry name="content/extra-file.xml" href="/some/place/file.xml"/>
+   <entry name="content/override.xsl"   href="override.xsl"/>
+   <entry name="content/generated.xml"  href="http://example.org/some-name.xml"/>
+</manifest>]]></pre>
+         <p>@name is the entry name in the final XAR file.  For instance, the
+            first entry above places an extra descriptor at the root, and the
+            other entries add files within the content dir.</p>
+         <p>@href is the base URI of a document in the port "files".  If it is
+            relative, it is resolved against the project src/ directory.  For
+            instance, the first entry above refers to a file in the xproject/
+            dircetory (resolved from within src/, so needs '../').  The second
+            and third entries also resolve against src/ (either from the file
+            system root, or within the same dir).  The last entry refers to an
+            absolute HTTP URI, which is just a name, and a document with the
+            same base URI must be in the port "files" (useful if the file has
+            been generated, so the base URI is set explicitly).</p>
+         <p>If an entry has the same name as one entry automatically generated
+            from src/, it then overrides it.  In this case, the entry is not
+            necessary (just add the overriding document to the port "files",
+            with the correct base URI, is enough).</p>
+      </p:documentation>
+   </p:input>
+
    <p:input port="parameters" primary="true" kind="parameter">
       <p:documentation>
          <p>The parameters.</p>
@@ -48,39 +76,9 @@
    </p:option>
 
    <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+   <p:import href="library.xpl"/>
 
-   <p:declare-step type="proj:recurse-dir">
-      <p:documentation>
-         <p>Like p:directory-list, but recursive.</p>
-      </p:documentation>
-      <!-- the recursive dir structure -->
-      <p:output port="result" primary="true"/>
-      <p:option name="dir"         required="true"/>
-      <p:option name="ignore-dirs" required="true"/>
-      <p:directory-list>
-         <p:with-option name="path" select="$dir"/>
-      </p:directory-list>
-      <p:viewport match="/*/c:directory">
-         <p:choose>
-            <!-- TODO: Optionalize this list... -->
-            <p:when test="/*/@name = tokenize($ignore-dirs, ',')">
-               <p:identity>
-                  <p:input port="source">
-                     <p:empty/>
-                  </p:input>
-               </p:identity>
-            </p:when>
-            <p:otherwise>
-               <proj:recurse-dir>
-                  <p:with-option name="dir" select="resolve-uri(concat(/*/@name, '/'), $dir)"/>
-                  <p:with-option name="ignore-dirs" select="$ignore-dirs"/>
-               </proj:recurse-dir>
-            </p:otherwise>
-         </p:choose>
-      </p:viewport>
-   </p:declare-step>
-
-   <p:declare-step type="proj:zip-structure">
+   <p:declare-step type="proj:zip-structure" name="this">
       <p:documentation>
          <p>From the recursive content of src/, build the corresponding ZIP structure.</p>
          <p>The ZIP structure (as expected by pxp:zip) does not include the top-level
@@ -89,38 +87,17 @@
       </p:documentation>
       <!-- the recursive src/ structure -->
       <p:input  port="source" primary="true"/>
+      <!-- the extra entries, from the port "manifest" on "pipeline", optional -->
+      <p:input  port="manifest" sequence="true"/>
       <!-- the corresponding zip structure (to pass to pxp:zip) -->
       <p:output port="result" primary="true"/>
       <p:xslt>
+         <p:input port="source">
+            <p:pipe step="this" port="source"/>
+            <p:pipe step="this" port="manifest"/>
+         </p:input>
          <p:input port="stylesheet">
-            <p:inline>
-               <xsl:stylesheet version="2.0">
-                  <xsl:template match="/*" priority="-1">
-                     <xsl:sequence select="error((), concat('Unknown root element: ', name(.)))"/>
-                  </xsl:template>
-                  <xsl:template match="/c:directory">
-                     <c:zip-manifest>
-                        <xsl:apply-templates select="*">
-                           <xsl:with-param name="path" select="'content/'"/>
-                           <xsl:with-param name="href" select="@xml:base"/>
-                        </xsl:apply-templates>
-                     </c:zip-manifest>
-                  </xsl:template>
-                  <xsl:template match="c:directory">
-                     <xsl:param name="path" as="xs:string"/>
-                     <xsl:param name="href" as="xs:anyURI"/>
-                     <xsl:apply-templates select="*">
-                        <xsl:with-param name="path" select="concat($path, @name, '/')"/>
-                        <xsl:with-param name="href" select="resolve-uri(concat(@name, '/'), $href)"/>
-                     </xsl:apply-templates>
-                  </xsl:template>
-                  <xsl:template match="c:file">
-                     <xsl:param name="path" as="xs:string"/>
-                     <xsl:param name="href" as="xs:anyURI"/>
-                     <c:entry name="{ concat($path, @name) }" href="{ resolve-uri(@name, $href) }"/>
-                  </xsl:template>
-               </xsl:stylesheet>
-            </p:inline>
+            <p:document href="build-zip-structure.xsl"/>
          </p:input>
          <p:input port="parameters">
             <p:empty/>
@@ -267,7 +244,7 @@
       <p:option name="href" required="true"/>
       <!-- components to ignore, comma-separated list of anchored regexes -->
       <p:option name="ignore-components" required="true"/>
-      <p:for-each>
+      <p:for-each name="loop">
          <p:iteration-source select="/*/*"/>
          <p:choose>
             <p:when test="/* instance of element(c:directory)">
@@ -313,7 +290,11 @@
                </p:choose>
             </p:when>
             <p:otherwise>
-               <p:error code="proj:BUILD001"/>
+               <p:error code="proj:BUILD001">
+                  <p:input port="source">
+                     <p:pipe step="loop" port="current"/>
+                  </p:input>
+               </p:error>
             </p:otherwise>
          </p:choose>
       </p:for-each>
@@ -618,7 +599,11 @@
    <!--
        Generate the ZIP manifest.
    -->
-   <proj:zip-structure/>
+   <proj:zip-structure>
+      <p:input port="manifest">
+         <p:pipe step="pipeline" port="manifest"/>
+      </p:input>
+   </proj:zip-structure>
 
    <proj:add-extension-entry desc-name="saxon.xml">
       <p:with-option name="private-dir" select="$private-dir"/>
