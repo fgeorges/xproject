@@ -447,6 +447,7 @@
       <!-- the real URI to the current component -->
       <p:option name="href" required="true"/>
       <!-- TODO: This is the only way I am aware of to load data from a dynamic URI.  Gosh! -->
+      <!-- If we were using XQuery 3.0, we could use fn:unparsed-text() from within the query. -->
       <p:xslt template-name="main">
          <p:with-param name="href" select="$href"/>
          <p:input port="source">
@@ -474,16 +475,22 @@
          <p:input port="query">
             <p:inline>
                <c:query>
-                  import module namespace p = "XQueryV30.ebnf" at "xquery-parser.xql";
+		  xquery version "1.0";
+                  import module namespace p = "xquery-30" at "xquery-parser.xql";
                   declare variable $href  as xs:string external;
                   declare variable $query as xs:string external;
-                  let $literal := p:parse-XQuery($query)/Module/LibraryModule/ModuleDecl/URILiteral
+                  let $parse-tree := p:parse-XQuery($query)
+                  let $literal    := $parse-tree/Module/LibraryModule/ModuleDecl/URILiteral
                   return
                     &lt;namespace> {
                       (:
                         URILiteral must contain the leading and tailing " chars.  Remove them.
                       :)
-                      if ( starts-with($literal, '"') and ends-with($literal, '"') ) then
+		      if ( exists($parse-tree/self::ERROR) ) then
+		        error(
+			  QName('http://expath.org/ns/project', 'proj:syntax-error'),
+			  concat('Syntax error parsing ', $href, ': ', $parse-tree))
+                      else if ( starts-with($literal, '"') and ends-with($literal, '"') ) then
                         substring($literal, 2, string-length($literal) - 2)
                       else
                         (: TODO: Or an error instead? :)
