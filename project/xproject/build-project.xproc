@@ -20,6 +20,13 @@
    <p:import href="../src/build.xproc"/>
    <!--p:import href="http://expath.org/ns/project/build.xproc"/-->
 
-   <proj:build ignore-dirs=".~,templates" ignore-components="xquery-parser.xql"/>
+   <proj:build ignore-dirs=".~,doc" ignore-components="xquery-parser.xql">
+      <p:input port="files">
+         <p:empty/>
+      </p:input>
+      <p:input port="manifest">
+         <p:empty/>
+      </p:input>
+   </proj:build>
 
 </p:declare-step>

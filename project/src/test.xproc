@@ -18,10 +18,10 @@
       </p:documentation>
    </p:input>
 
-   <!-- the list of suites -->
    <p:output port="result" primary="true" sequence="true">
       <p:documentation>
-         <p></p>
+         <p>The list of suites.</p>
+         <p>TODO: Document the format of the output.</p>
       </p:documentation>
    </p:output>
 
