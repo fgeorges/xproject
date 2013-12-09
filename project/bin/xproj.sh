@@ -90,10 +90,11 @@ if [[ "$1" == build ]]; then
     if [[ ! -d dist ]]; then
         mkdir dist;
     fi
+    svn_rev=`svnversion 2>/dev/null`
     git_rev=`git describe --always 2>/dev/null`
-    if [[ -d .svn ]]; then
+    if [[ -n "${svn_rev}" ]]; then
         "$CALABASH" -i source=xproject/project.xml -b "proj=${PROJ_NS}" \
-            -p "proj:revision=`svnversion 2>/dev/null`" "$BUILDER";
+            -p "proj:revision=${svn_rev}" "$BUILDER";
     elif [[ -n "${git_rev}" ]]; then
         "$CALABASH" -i source=xproject/project.xml -b "proj=${PROJ_NS}" \
             -p "proj:revision=${git_rev}" "$BUILDER";
