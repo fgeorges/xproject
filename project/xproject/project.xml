@@ -1,7 +1,7 @@
 <project xmlns="http://expath.org/ns/project"
          name="http://expath.org/lib/project"
          abbrev="xproject"
-         version="0.5.1">
+         version="0.5.2">
 
    <title>XML Project Manager</title>
 
